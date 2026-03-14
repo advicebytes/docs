@@ -1,49 +1,68 @@
 ---
-title: Introduction to Sector8
+title: Introduction
 description: Pre-execution governance for enterprise LLM deployments
 ---
 
+<Note>
+  **Sector8 is in active production.** The Guard Module is live — Phase 2 invariants enforced, MCP server available, Python SDK published.
+</Note>
+
 ## What is Sector8?
 
-Sector8 is a **deterministic execution governance layer** that sits as a control plane above enterprise LLM deployments. Every tool call an LLM makes passes through the Guard Module before reaching the OS, filesystem, or network.
+Sector8 is a **deterministic execution governance layer** for enterprise AI. Every tool call an LLM agent makes passes through the Guard Module *before* it reaches your OS, filesystem, or network.
 
-The LLM is treated as an untrusted executor at all times. It proposes actions. The Guard Module decides whether they run.
+The LLM is treated as an **untrusted executor** at all times. It proposes actions. Sector8 decides whether they run.
 
 <CardGroup cols={2}>
-  <Card title="Guardrails" icon="shield" href="/guides/guardrails">
+  <Card title="Guardrails" icon="shield-halved" href="/guides/guardrails">
     How the Guard Module intercepts and evaluates every tool call before execution
   </Card>
-  <Card title="Python SDK" icon="code" href="/guides/python-sdk">
-    Wire the Guard Module into your existing LLM application in minutes
+  <Card title="Quickstart" icon="bolt" href="/guides/quickstart">
+    Wire up Sector8 in under 5 minutes with the Python SDK
   </Card>
   <Card title="Guard MCP Server" icon="plug" href="/guides/mcp-server">
-    Govern Claude Code tool calls automatically — no code changes required
+    Govern Claude Code and MCP agent tool calls — no code changes required
   </Card>
-  <Card title="API Reference" icon="rectangle-terminal" href="/api-reference/overview">
-    REST API for evaluating tool calls and retrieving telemetry
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    REST API for evaluating tool calls and retrieving decision telemetry
   </Card>
 </CardGroup>
 
 ## The core guarantee
 
 <Info>
-**LLM outputs are proposals, not commands.** No tool call executes without passing the Admission Controller — regardless of how the model was instructed, what context it received, or how many turns have elapsed.
+  **LLM outputs are proposals, not commands.** No tool call executes without passing the Admission Controller — regardless of how the model was instructed, what context it received, or how many turns have elapsed.
 </Info>
 
 ## Why pre-execution matters
 
-Traditional AI security tools operate after the fact:
+Most AI security tools operate after harm has already occurred. Sector8 is different.
 
-| Approach | When it runs | Data exposure |
-|----------|-------------|---------------|
-| **Sector8 Guard Module** | Before OS execution | None — data never accessed |
-| Output filters / model safety | After LLM generates response | LLM has already seen data |
-| SIEM / DLP | After network transmission | Data has already moved |
-| Audit logs | After everything | Detective only — no prevention |
+| Approach | When it runs | Can it prevent harm? |
+|---|---|---|
+| **Sector8 Guard Module** | Before OS execution | **Yes — data never accessed** |
+| Output filters / model safety | After LLM generates response | No — model has already seen data |
+| SIEM / DLP | After network transmission | No — data has already moved |
+| Audit logs | After everything | No — detective only |
 
-## Live status
+## How it works
 
-The Guard Module is production-ready. Current deployment state:
+<Steps>
+  <Step title="Agent proposes a tool call">
+    Your LLM agent (Claude, GPT-4, Gemini) decides to call a tool — bash, file read, web fetch, database query.
+  </Step>
+  <Step title="Guard Module intercepts">
+    The call is routed through Sector8's Admission Controller *before* execution. The policy engine evaluates it against your active invariants.
+  </Step>
+  <Step title="Decision with full audit trail">
+    The Guard Module returns `ALLOW` or `DENY` with a cryptographic evidence hash, reason code, and decision trace ID — tamper-evident and forensically complete.
+  </Step>
+  <Step title="Safe execution or block">
+    Allowed calls proceed. Denied calls are blocked with a forensic payload attached. Every decision is logged.
+  </Step>
+</Steps>
+
+## Current deployment status
 
 ```json
 {
@@ -62,3 +81,17 @@ The Guard Module is production-ready. Current deployment state:
   }
 }
 ```
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Python SDK" icon="python" href="/guides/python-sdk">
+    Install and integrate in minutes
+  </Card>
+  <Card title="MCP Server" icon="plug" href="/guides/mcp-server">
+    Zero-code agent governance
+  </Card>
+  <Card title="Compliance" icon="shield-check" href="/guides/compliance">
+    GDPR, HIPAA, SOC 2 controls
+  </Card>
+</CardGroup>
