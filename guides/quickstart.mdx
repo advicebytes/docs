@@ -1,77 +1,17 @@
 ---
 title: Quickstart
-description: Add pre-execution governance to your LLM application in under 5 minutes.
+description: Get Sector8 running in under 10 minutes
 ---
 
-## Prerequisites
+<Info>Full quickstart guide coming soon. In the meantime, see the [Python SDK](/guides/python-sdk) or [Guard MCP Server](/guides/mcp-server) guides to get started.</Info>
 
-- Python 3.9+
-- A Sector8 API key ([book a demo](https://sector8.ai/contact) to get one)
-
-## 1. Install the SDK
-
-```bash
-pip install sector8-sdk
-```
-
-## 2. Set your API key
-
-```bash
-export SECTOR8_API_KEY=sk-your-key-here
-```
-
-## 3. Wrap your first tool call
-
-```python
-from sector8 import GuardClient
-
-guard = GuardClient(api_key="sk-your-key-here")
-
-# Evaluate before executing
-result = guard.evaluate(
-    tool_name="bash",
-    arguments={"command": "ls /tmp"}
-)
-
-if result.decision == "ALLOW":
-    print("Allowed:", result.decision_trace_id)
-else:
-    print("Blocked:", result.reason_code)
-    print("Trace ID:", result.decision_trace_id)
-```
-
-## 4. Verify it works
-
-A safe command returns `ALLOW`:
-
-```bash
-python your_script.py
-# Allowed: bd970b1f-5336-41ef-a63a-ebbf8e4db839
-```
-
-A destructive command is blocked:
-
-```python
-result = guard.evaluate(
-    tool_name="bash",
-    arguments={"command": "rm -rf /"}
-)
-# decision: DENY
-# reason_code: MCP_SHELL_INJECTION_BLOCKED
-# has_forensic_payload: true
-```
-
-<Check>
-  Both calls routed through the Guard Module with tamper-evident audit trails.
-</Check>
-
-## Next steps
+## Choose your path
 
 <CardGroup cols={2}>
-  <Card title="MCP Server" icon="plug" href="/guides/mcp-server">
-    Govern Claude Code automatically — no code changes
+  <Card title="Python SDK" icon="python" href="/guides/python-sdk">
+    Wire the Guard Module into an existing LLM application
   </Card>
-  <Card title="Guardrails" icon="shield-halved" href="/guides/guardrails">
-    Understand how invariants and policies work
+  <Card title="Guard MCP Server" icon="plug" href="/guides/mcp-server">
+    Govern Claude Code tool calls with one config file
   </Card>
 </CardGroup>

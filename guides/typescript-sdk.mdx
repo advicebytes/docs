@@ -1,6 +1,54 @@
 ---
 title: TypeScript SDK
-description: Integrate Sector8 into your Node.js or frontend application.
+description: Wire the Sector8 Guard Module into your Node.js or TypeScript application
 ---
 
-Coming soon.
+<Info>The TypeScript SDK is in active development. For early access contact [support@sector8.ai](mailto:support@sector8.ai). In the meantime, use the [REST API](/api-reference/overview) directly.</Info>
+
+## Coming soon
+
+```bash
+npm install @sector8/sdk
+```
+
+```typescript
+import { GuardClient, ToolCallRequest } from '@sector8/sdk';
+
+const client = new GuardClient({
+  apiKey: process.env.SECTOR8_API_KEY,
+  clientId: process.env.SECTOR8_CLIENT_ID,
+});
+
+const result = await client.evaluate({
+  toolName: 'bash',
+  arguments: { command: 'ls -la' },
+  sessionId: 'session-abc123',
+});
+
+if (result.decision === 'DENY') {
+  console.log('Blocked:', result.reasonCode);
+  console.log('Evidence hash:', result.evidenceHash);
+}
+```
+
+## Use the REST API now
+
+While the SDK is in development, you can use the [REST API](/api-reference/overview) directly from any Node.js application:
+
+```typescript
+const response = await fetch('https://api.sector8.ai/v1/evaluate', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${process.env.SECTOR8_API_KEY}`,
+    'X-Client-ID': process.env.SECTOR8_CLIENT_ID,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    tool_name: 'bash',
+    arguments: { command: 'ls -la' },
+    session_id: 'session-abc123',
+  }),
+});
+
+const decision = await response.json();
+```

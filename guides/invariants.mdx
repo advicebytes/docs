@@ -1,6 +1,18 @@
 ---
-title: Invariants
-description: Define and enforce policy invariants in Sector8.
+title: The Seven Invariants
+description: Non-negotiable system properties enforced by every Sector8 deployment
 ---
 
-Coming soon.
+The seven invariants are the foundational contracts of the Sector8 Guard Module. Every deployment enforces all seven. Violation at runtime is a critical defect.
+
+<Info>The full invariants reference with implementation details is covered in the [Guardrails guide](/guides/guardrails#the-seven-invariants).</Info>
+
+| # | Name | Contract |
+|---|------|----------|
+| INV-1 | Single Execution Gate | No direct path from LLM output to tool execution. The AC is the only dispatch path. |
+| INV-2 | Dual Gate Requirement | Policy decides intent. Authorization decides capability. Execution requires both. |
+| INV-3 | Per-Step Enforcement | The AC runs per tool call, per agent step, after LLM planning, before execution. |
+| INV-4 | Untrusted Executor | The LLM produces candidates. The control plane decides outcomes. |
+| INV-5 | Spotlighting Before Policy | Content is trust-tagged before evaluation. Untrusted content cannot self-promote. |
+| INV-6 | Boolean AND Condition | `execute = (policy == ALLOW) AND (admission == PASS)`. Partial pass = block. |
+| INV-7 | Trust Inversion Forbidden | No component consuming untrusted outputs may be the final authority to permit execution. |

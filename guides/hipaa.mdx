@@ -1,6 +1,41 @@
 ---
 title: HIPAA
-description: Sector8 HIPAA compliance controls.
+description: How Sector8 enforces HIPAA controls for PHI protection in AI applications
 ---
 
-Coming soon.
+<Info>Full HIPAA compliance guide coming soon. See the [Compliance Overview](/guides/compliance) for a summary of all framework coverage.</Info>
+
+## Controls enforced at tool boundary
+
+| HIPAA Requirement | How Sector8 enforces it |
+|------------------|------------------------|
+| §164.312(a) — Access control | Tool allowlist + RBAC enforced at admission check 3 |
+| §164.312(b) — Audit controls | Tamper-evident audit trail on every tool call, ALLOW and DENY |
+| §164.312(c) — Integrity | HMAC-SHA256 signed policy bundles prevent policy tampering |
+| §164.312(e) — Transmission security | Blocks data transmission to unlisted external domains |
+| Minimum necessary standard | Pre-filter blocks requests exceeding defined data access scope |
+
+## PHI detection
+
+Sector8 detects and blocks access to or transmission of:
+- Medical record numbers (MRN)
+- Diagnosis codes (ICD-10)
+- Patient names combined with medical context
+- Insurance member IDs
+- Prescription details
+- Clinical notes containing patient identifiers
+
+## Audit record format
+
+Every PHI access attempt produces:
+
+```json
+{
+  "threat_type": "pii_exfiltration",
+  "severity": "critical",
+  "evidence_hash": "bdbde1558fb883...",
+  "has_forensic_payload": true,
+  "policy_version": "eea811e4f6d3c2...",
+  "decision_trace_id": "17e797c0-eb5c-4f97..."
+}
+```

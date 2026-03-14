@@ -1,6 +1,28 @@
 ---
 title: GDPR
-description: Sector8 GDPR compliance controls.
+description: How Sector8 enforces GDPR controls at the LLM tool execution boundary
 ---
 
-Coming soon.
+<Info>Full GDPR compliance guide coming soon. See the [Compliance Overview](/guides/compliance) for a summary of all framework coverage.</Info>
+
+## Controls enforced at tool boundary
+
+| GDPR Requirement | How Sector8 enforces it |
+|-----------------|------------------------|
+| Art. 5 — Data minimisation | Blocks bulk export and unnecessary data access before execution |
+| Art. 17 — Right to erasure | Audit trail with tamper-evident evidence hash on all data access attempts |
+| Art. 25 — Privacy by design | Policy enforced pre-execution — data never accessed until policy permits |
+| Art. 32 — Security of processing | HMAC-SHA256 signed policy bundles, immutable audit trail |
+| Art. 33 — Breach notification | `escalate: true` + `notify: "security_team"` on critical violations |
+
+## PII detection
+
+Sector8 detects and blocks transmission of:
+- Email addresses
+- Phone numbers
+- Date of birth
+- Names combined with identifiers
+- National ID numbers
+- Financial account numbers
+
+All PII violations produce a `has_forensic_payload: true` record with full evidence linkage.

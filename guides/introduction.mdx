@@ -1,82 +1,108 @@
 ---
-title: Security & Observability for Enterprise AI
-description: Monitor, protect, and govern your AI applications in real-time. Turn AI black boxes into secure, auditable systems.
+title: Welcome to Sector8
+description: Security & Observability for Enterprise AI
 ---
+
+# Security & Observability for Enterprise AI
 
 Monitor, protect, and govern your AI applications in real-time. Turn AI black boxes into secure, auditable systems.
 
+<Info>
+**Sector8 enforces security before execution — not after.** Every LLM tool call passes through a policy gate before the OS acts on it. Data never moves until a decision is made.
+</Info>
+
+---
+
+## What you can do with Sector8
+
 <CardGroup cols={2}>
-  <Card title="Get Started" icon="bolt" href="/guides/quickstart">
-    Wire up Sector8 in under 5 minutes
+  <Card title="Block threats in real time" icon="shield-halved">
+    Stop prompt injection, shell injection, PII exfiltration, and data leakage before they execute. 314/314 threats blocked. 100% forensic coverage.
   </Card>
-  <Card title="Book a Demo" icon="calendar" href="https://sector8.ai/contact">
-    See Sector8 in action with your stack
+  <Card title="Govern Claude Code" icon="plug">
+    The Guard MCP Server intercepts every Claude Code tool call — bash, file access, web fetch — before OS execution. One config file, zero code changes.
+  </Card>
+  <Card title="Full audit trail" icon="file-lines">
+    Every blocked call produces a tamper-evident record with a signed evidence hash, policy version, and decision trace ID. Built for GDPR, HIPAA, and PCI-DSS.
+  </Card>
+  <Card title="Drop into existing apps" icon="code">
+    Wire the Guard Module into any LLM application via the Python SDK or REST API. Works with any model, any agent framework.
   </Card>
 </CardGroup>
 
 ---
 
-## What is Sector8?
-
-Sector8 is a **runtime security and observability platform** for enterprise AI. Every tool call an LLM agent makes passes through the Guard Module *before* it reaches your OS, filesystem, or network — giving you full visibility and control over what your AI actually does.
-
-<Info>
-  **LLM outputs are proposals, not commands.** No tool call executes without passing the Admission Controller — regardless of how the model was instructed, what context it received, or how many turns have elapsed.
-</Info>
-
-## Why Sector8?
-
-<CardGroup cols={3}>
-  <Card title="Runtime Protection" icon="shield-halved">
-    Block malicious or unintended tool calls before they execute — not after.
-  </Card>
-  <Card title="Full Observability" icon="eye">
-    Every LLM interaction logged with cryptographic audit trails. Nothing is a black box.
-  </Card>
-  <Card title="Enterprise Compliance" icon="shield-check">
-    GDPR, HIPAA, and SOC 2 controls built in. Prove compliance with tamper-evident evidence.
-  </Card>
-</CardGroup>
-
 ## How it works
 
-<Steps>
-  <Step title="Agent proposes a tool call">
-    Your LLM agent (Claude, GPT-4, Gemini) decides to call a tool — bash, file read, web fetch, database query.
-  </Step>
-  <Step title="Guard Module intercepts">
-    The call is routed through Sector8's Admission Controller *before* execution. The policy engine evaluates it against your active invariants.
-  </Step>
-  <Step title="Decision with full audit trail">
-    Returns `ALLOW` or `DENY` with a cryptographic evidence hash, reason code, and decision trace ID — tamper-evident and forensically complete.
-  </Step>
-  <Step title="Safe execution or block">
-    Allowed calls proceed. Denied calls are blocked with a forensic payload attached. Every decision is logged.
-  </Step>
-</Steps>
+The LLM proposes actions. Sector8 decides whether they run.
 
-## Pre-execution vs. reactive security
+```
+LLM Output
+    │
+    ▼
+Spotlighting          ← trust-tags all content by source
+    │
+    ▼
+Pre-Filter            ← fast path: <5ms, blocks obvious threats
+    │
+    ▼
+Admission Controller  ← 5-check policy gate, 7 invariants enforced
+    │
+  DENY │ ALLOW
+    │       │
+Blocked  Executes
++ trace  + telemetry
+```
 
-| Approach | When it runs | Can it prevent harm? |
-|---|---|---|
-| **Sector8 Guard Module** | Before OS execution | **Yes — data never accessed** |
-| Output filters / model safety | After LLM generates response | No — model has already seen data |
-| SIEM / DLP | After network transmission | No — data has already moved |
-| Audit logs | After everything | No — detective only |
+Unlike output filters or SIEM tools — which run after data has already moved — Sector8 enforces policy **before the OS executes the tool call**. There is no path around the gate.
 
-## Explore the docs
+---
 
-<CardGroup cols={2}>
-  <Card title="Guardrails" icon="shield-halved" href="/guides/guardrails">
-    How the Guard Module intercepts and evaluates every tool call
-  </Card>
-  <Card title="Guard MCP Server" icon="plug" href="/guides/mcp-server">
-    Govern Claude Code and MCP agents — no code changes required
+## Get started
+
+<CardGroup cols={3}>
+  <Card title="Guardrails" icon="shield" href="/guides/guardrails">
+    Understand the Guard Module — invariants, admission checks, spotlighting, and forensic telemetry
   </Card>
   <Card title="Python SDK" icon="python" href="/guides/python-sdk">
-    Integrate Sector8 into your LLM application in minutes
+    Wire the Guard Module into your application in minutes
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/overview">
-    REST API for tool call evaluation and decision telemetry
+  <Card title="Guard MCP Server" icon="plug" href="/guides/mcp-server">
+    Govern Claude Code tool calls — no code changes required
   </Card>
 </CardGroup>
+
+---
+
+## Why pre-execution matters
+
+| Enforcement point | Timing | Data exposure |
+|-------------------|--------|---------------|
+| **Sector8 Guard Module** | Before OS execution | None — data never accessed |
+| Output filters / model safety | After LLM generates response | LLM has already seen data |
+| SIEM / DLP | After network transmission | Data has already moved |
+| Audit logs | After everything | Detective only |
+
+---
+
+## Live system status
+
+```json
+{
+  "status": "healthy",
+  "phase": "2",
+  "invariants_active": 7,
+  "policy_version_id": "0dbca364d664...ebc7",
+  "capabilities": {
+    "admission_controller": true,
+    "semantic_engine":      true,
+    "pre_filter":           true,
+    "multi_turn_analyzer":  true,
+    "output_compliance":    true,
+    "file_scanner":         true,
+    "rag_integrity":        true,
+    "memory_integrity":     true,
+    "guard_mcp_server":     true
+  }
+}
+```
