@@ -1,0 +1,112 @@
+---
+title: Guard MCP Server
+description: Govern Claude Code tool calls automatically — no code changes required
+---
+
+## What it does
+
+The Guard MCP Server intercepts every Claude Code tool call — bash, file read/write, web fetch — before OS execution. It routes each call through the Sector8 Admission Controller and either permits or blocks it.
+
+Zero changes to your agent or prompts. One config file. Full forensic telemetry on every call.
+
+## Installation
+
+```bash
+sector8-guard install
+```
+
+This writes to `.claude/settings.json` in your project root:
+
+```json
+{
+  "mcpServers": {
+    "sector8-guard": {
+      "command": "sector8-guard-mcp",
+      "args": ["--policy", "enterprise-v1"],
+      "env": {
+        "SECTOR8_API_KEY": "${SECTOR8_API_KEY}",
+        "SECTOR8_CLIENT_ID": "${SECTOR8_CLIENT_ID}"
+      }
+    }
+  }
+}
+```
+
+## How it works
+
+```
+Claude Code tool call
+        │
+        ▼ (JSON-RPC via MCP protocol)
+Guard MCP Server
+        │
+        ▼
+Admission Controller   ← same policy engine, same 7 invariants
+        │
+   DENY │ ALLOW
+        │
+     Blocks  │  Executes
+     with    │  tool and
+     trace   │  returns result
+```
+
+The Guard MCP Server is the same Admission Controller used by the REST API — not a separate system. Policy, telemetry, and forensic records are unified.
+
+## Governed tools
+
+| Tool | What gets checked |
+|------|-------------------|
+| `bash` | Command for shell injection, destructive operations |
+| `read_file` | Path for sensitive file access (`/etc/passwd`, credentials) |
+| `write_file` | Path and content for injection payloads, PII |
+| `web_fetch` | URL against domain allowlist, exfiltration patterns |
+
+## Example — blocked call
+
+```json
+{
+  "decision": "DENY",
+  "tool_name": "bash",
+  "reason_code": "SHELL_INJECTION_BLOCKED",
+  "evidence_hash": "bdbde1558fb883573b0f6e8630...",
+  "has_forensic_payload": true,
+  "decision_trace_id": "32819155-d21a-49c8-9509-79338d980fa9"
+}
+```
+
+## Example — allowed call
+
+```json
+{
+  "decision": "ALLOW",
+  "tool_name": "bash",
+  "reason_code": null,
+  "pre_filter_decision": "PASS",
+  "semantic_score": 0.08,
+  "decision_trace_id": "17e797c0-eb5c-4f97-b4a1-2d3e4f5a6b7c"
+}
+```
+
+## Verify the connection
+
+After installation, open Claude Code in your project and run:
+
+```
+/mcp
+```
+
+You should see `sector8-guard` listed as a connected server.
+
+To test it is working, ask Claude Code to run a blocked command:
+
+```
+Run: rm -rf /
+```
+
+The Guard MCP Server will intercept and deny the call before anything executes.
+
+## Fleet deployment
+
+For teams, distribute `.claude/settings.json` via your repo. Every engineer with the file gets governed tool calls automatically — no individual setup required.
+
+Per-engineer telemetry is recorded separately, identifiable by `user_id` in the telemetry records.

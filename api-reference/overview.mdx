@@ -1,0 +1,52 @@
+---
+title: API Overview
+description: REST API for the Sector8 Guard Module
+---
+
+## Base URL
+
+```
+https://api.sector8.ai/v1
+```
+
+## Authentication
+
+All requests require two headers:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+X-Client-ID: YOUR_CLIENT_ID
+```
+
+Get your API key from the [Sector8 dashboard](https://sector8.ai).
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | [`/health`](/api-reference/health) | Guard Module health and capability state |
+| `POST` | [`/evaluate`](/api-reference/evaluate) | Evaluate a tool call against active policy |
+| `POST` | [`/analyze`](/api-reference/analyze) | Analyze a completed LLM interaction |
+
+## Reason codes
+
+| Code | Threat | Severity |
+|------|--------|----------|
+| `SHELL_INJECTION_BLOCKED` | Shell injection | Critical |
+| `SENSITIVE_PATH_BLOCKED` | Sensitive file access | High |
+| `PII_EXPOSURE_BLOCKED` | PII / PHI in payload | Medium–High |
+| `DATA_EXFILTRATION_BLOCKED` | External data transmission | Critical |
+| `PROMPT_INJECTION_BLOCKED` | Instruction override attempt | High |
+| `SEMANTIC_THREAT_DETECTED` | Semantic similarity to known attack | High |
+| `ESCALATION_SCORE_EXCEEDED` | Multi-turn session escalation | High |
+| `PRE_FILTER_BLOCK` | Fast-path pattern match | Critical |
+| `LOCKDOWN_MODE_RESTRICTED` | Capability gate | Medium |
+| `SOFT_COMPLIANCE_VIOLATION` | Output compliance — refusal bypass | Medium |
+
+## Rate limits
+
+| Tier | Requests/min | Burst |
+|------|-------------|-------|
+| Free | 60 | 100 |
+| Pro | 600 | 1,000 |
+| Enterprise | Unlimited | Custom |

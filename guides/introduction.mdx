@@ -1,0 +1,64 @@
+---
+title: Introduction to Sector8
+description: Pre-execution governance for enterprise LLM deployments
+---
+
+## What is Sector8?
+
+Sector8 is a **deterministic execution governance layer** that sits as a control plane above enterprise LLM deployments. Every tool call an LLM makes passes through the Guard Module before reaching the OS, filesystem, or network.
+
+The LLM is treated as an untrusted executor at all times. It proposes actions. The Guard Module decides whether they run.
+
+<CardGroup cols={2}>
+  <Card title="Guardrails" icon="shield" href="/guides/guardrails">
+    How the Guard Module intercepts and evaluates every tool call before execution
+  </Card>
+  <Card title="Python SDK" icon="code" href="/guides/python-sdk">
+    Wire the Guard Module into your existing LLM application in minutes
+  </Card>
+  <Card title="Guard MCP Server" icon="plug" href="/guides/mcp-server">
+    Govern Claude Code tool calls automatically — no code changes required
+  </Card>
+  <Card title="API Reference" icon="rectangle-terminal" href="/api-reference/overview">
+    REST API for evaluating tool calls and retrieving telemetry
+  </Card>
+</CardGroup>
+
+## The core guarantee
+
+<Info>
+**LLM outputs are proposals, not commands.** No tool call executes without passing the Admission Controller — regardless of how the model was instructed, what context it received, or how many turns have elapsed.
+</Info>
+
+## Why pre-execution matters
+
+Traditional AI security tools operate after the fact:
+
+| Approach | When it runs | Data exposure |
+|----------|-------------|---------------|
+| **Sector8 Guard Module** | Before OS execution | None — data never accessed |
+| Output filters / model safety | After LLM generates response | LLM has already seen data |
+| SIEM / DLP | After network transmission | Data has already moved |
+| Audit logs | After everything | Detective only — no prevention |
+
+## Live status
+
+The Guard Module is production-ready. Current deployment state:
+
+```json
+{
+  "phase": "2",
+  "invariants_active": 7,
+  "capabilities": {
+    "admission_controller": true,
+    "semantic_engine": true,
+    "pre_filter": true,
+    "multi_turn_analyzer": true,
+    "output_compliance": true,
+    "file_scanner": true,
+    "rag_integrity": true,
+    "memory_integrity": true,
+    "guard_mcp_server": true
+  }
+}
+```

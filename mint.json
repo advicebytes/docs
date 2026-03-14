@@ -1,0 +1,84 @@
+{
+  "name": "Sector8",
+  "logo": {
+    "dark": "/logo/sector8-dark.svg",
+    "light": "/logo/sector8-light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#5B3CF5",
+    "light": "#7C5AF6",
+    "dark": "#3D1FD9",
+    "background": {
+      "dark": "#08080f"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "sector8.ai",
+      "url": "https://sector8.ai"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Book Demo",
+    "url": "https://sector8.ai/contact"
+  },
+  "tabs": [
+    {
+      "name": "Guides",
+      "url": "guides"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Welcome",
+      "pages": ["guides/introduction"]
+    },
+    {
+      "group": "Getting Started",
+      "pages": [
+        "guides/quickstart",
+        "guides/onboard"
+      ]
+    },
+    {
+      "group": "Guard Module",
+      "pages": [
+        "guides/guardrails",
+        "guides/invariants",
+        "guides/mcp-server"
+      ]
+    },
+    {
+      "group": "SDK",
+      "pages": [
+        "guides/python-sdk",
+        "guides/typescript-sdk"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/health",
+        "api-reference/evaluate",
+        "api-reference/analyze"
+      ]
+    },
+    {
+      "group": "Compliance",
+      "pages": [
+        "guides/compliance",
+        "guides/gdpr",
+        "guides/hipaa"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "linkedin": "https://www.linkedin.com/company/sector8-ai"
+  }
+}

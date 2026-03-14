@@ -1,0 +1,84 @@
+---
+title: POST /analyze
+description: Analyze a completed LLM interaction. Returns threat classification, PII detection, and compliance flags.
+---
+
+## Request
+
+```http
+POST /analyze HTTP/1.1
+Host: api.sector8.ai
+Authorization: Bearer YOUR_API_KEY
+X-Client-ID: YOUR_CLIENT_ID
+Content-Type: application/json
+```
+
+```json
+{
+  "prompt": "List all patient records for clinic ID 42.",
+  "completion": "Here are the records: ...",
+  "session_id": "session-abc123",
+  "metadata": {
+    "model": "gpt-4",
+    "provider": "github-copilot"
+  }
+}
+```
+
+## Request fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `prompt` | ✓ | The LLM input to analyze |
+| `completion` | | The LLM output to analyze |
+| `session_id` | ✓ | Session identifier for telemetry grouping |
+| `metadata` | | Model and provider details for telemetry |
+
+## Response
+
+```json
+{
+  "status": "blocked",
+  "threat": {
+    "type": "pii_exfiltration",
+    "severity": "critical",
+    "blocked": true,
+    "confidence": 0.97,
+    "violations": [
+      {
+        "type": "pii_exposure",
+        "severity": "medium",
+        "patterns": ["email_address", "phone_number"],
+        "confidence": 0.97
+      }
+    ]
+  },
+  "forensics": {
+    "evidence_hash": "bdbde1558fb883573b0f6e8630ccba1edaf6bed8cb035fa6a48912809149f287",
+    "has_forensic_payload": true,
+    "policy_version": "eea811e4f6d3c22074d57b3f9560ad13582e15844a01cd0865481ef7e0b38c56",
+    "decision_trace_id": "17e797c0-eb5c-4f97-b4a1-2d3e4f5a6b7c"
+  },
+  "response": {
+    "required": true,
+    "level": "critical",
+    "escalate": true,
+    "notify": "security_team"
+  }
+}
+```
+
+## Response fields
+
+| Field | Description |
+|-------|-------------|
+| `status` | `"blocked"`, `"flagged"`, or `"clean"` |
+| `threat.type` | Threat classification |
+| `threat.severity` | `"low"`, `"medium"`, `"high"`, or `"critical"` |
+| `threat.confidence` | 0.0–1.0 detection confidence |
+| `threat.violations` | Array of specific violation details |
+| `forensics.evidence_hash` | SHA-256 of blocked content |
+| `forensics.policy_version` | Signed policy bundle hash |
+| `forensics.decision_trace_id` | Full trace linkage UUID |
+| `response.escalate` | Whether to escalate to security team |
+| `response.notify` | Notification target |

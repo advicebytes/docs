@@ -1,0 +1,55 @@
+---
+title: GET /health
+description: Returns current health and capability state of the Guard Module
+---
+
+## Request
+
+```http
+GET /health HTTP/1.1
+Host: api.sector8.ai
+Authorization: Bearer YOUR_API_KEY
+```
+
+No request body required.
+
+## Response
+
+```json
+{
+  "status": "healthy",
+  "service": "running",
+  "database": "healthy",
+  "timestamp": "2026-03-14T11:17:26.896557+00:00",
+  "policy_version_id": "0dbca364d66447469637bafa2282e635124fcb99eecd6383038e3b652577ebc7",
+  "invariants_active": 7,
+  "phase": "2",
+  "capabilities": {
+    "admission_controller": true,
+    "multi_turn_analyzer":  true,
+    "semantic_engine":      true,
+    "pre_filter":           true,
+    "output_compliance":    true,
+    "file_scanner":         true,
+    "rag_integrity":        true,
+    "memory_integrity":     true,
+    "guard_mcp_server":     true
+  }
+}
+```
+
+## Response fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | string | `"healthy"` or `"degraded"` |
+| `service` | string | `"running"` or `"starting"` |
+| `database` | string | `"healthy"` or `"unreachable"` |
+| `policy_version_id` | string | HMAC-SHA256 hash of the active signed policy bundle |
+| `invariants_active` | number | Must be `7` on all healthy deployments |
+| `phase` | string | Active feature phase — `"1"` or `"2"` |
+| `capabilities` | object | Boolean flags for each active component |
+
+<Warning>
+If `invariants_active` is less than 7, the deployment is not operating at full security guarantee. Contact support immediately.
+</Warning>
