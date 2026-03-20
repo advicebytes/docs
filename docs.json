@@ -1,4 +1,6 @@
 {
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
   "name": "Sector8",
   "logo": {
     "dark": "/logo/sector8-dark.svg",
@@ -42,6 +44,63 @@
       "name": "LinkedIn",
       "icon": "linkedin",
       "url": "https://www.linkedin.com/company/sector8-ai"
+    }
+  ],
+  "tabs": [
+    {
+      "name": "Guides",
+      "url": "guides"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Welcome",
+      "pages": [
+        "guides/introduction"
+      ]
+    },
+    {
+      "group": "Getting Started",
+      "pages": [
+        "guides/quickstart",
+        "guides/onboard"
+      ]
+    },
+    {
+      "group": "Guard Module",
+      "pages": [
+        "guides/guardrails",
+        "guides/invariants",
+        "guides/mcp-server"
+      ]
+    },
+    {
+      "group": "SDK",
+      "pages": [
+        "guides/python-sdk",
+        "guides/typescript-sdk"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/health",
+        "api-reference/evaluate",
+        "api-reference/analyze"
+      ]
+    },
+    {
+      "group": "Compliance",
+      "pages": [
+        "guides/compliance",
+        "guides/gdpr",
+        "guides/hipaa"
+      ]
     }
   ],
   "navigation": {

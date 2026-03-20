@@ -63,7 +63,7 @@ Each tool call passes five sequential checks. Failure at any check returns DENY 
 |-------|-------------------|
 | 1. Policy evaluation | PII, prompt injection, shell injection, data exfiltration |
 | 2. Lockdown Mode | 3-tier capability gate (FULL / PARTIAL / OFF) |
-| 3. Authorization | RBAC and tool allowlist enforcement |
+| 3. Authorization | RBAC, BOLA (object-level authorization), BFLA (function-level authorization), and tool allowlist enforcement |
 | 4. Tool allowlist | Only registered, signed tools may execute |
 | 5. Semantic intent | Embedding-based similarity to known threat clusters |
 
@@ -111,6 +111,8 @@ Untrusted content cannot promote its own trust level.
 ## Forensic telemetry
 
 Every blocked call produces a tamper-evident record. All five fields are present on 100% of denied records.
+
+This includes fail-closed guard exceptions — if evaluation itself throws, the denial is issued with `reason_code: GUARD_INTERNAL_ERROR` and `has_forensic_payload: true`. The tool is never reached.
 
 ```json
 {
